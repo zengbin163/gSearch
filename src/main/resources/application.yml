@@ -1,0 +1,25 @@
+server:
+   port: 8888
+es:
+   port: 9200
+   host: 127.0.0.1
+   scheme: http
+spring:
+   datasource:
+      hikari:
+         master:
+            driverClassName: com.mysql.cj.jdbc.Driver
+            jdbc-url: jdbc:mysql://rm-bp18sq5pw2h4wek05uo.mysql.rds.aliyuncs.com:3306/gjyc?useUnicode=true&characterEncoding=UTF-8
+            username: root
+            password: GJ@2018*
+         slave:
+            driverClassName: com.mysql.cj.jdbc.Driver
+            jdbc-url: jdbc:mysql://rm-bp18sq5pw2h4wek05uo.mysql.rds.aliyuncs.com:3306/gjyc?useUnicode=true&characterEncoding=UTF-8
+            username: root
+            password: GJ@2018*
+logging:
+   level:
+      com.gaojie.gsearch: debug
+dynamic:
+   sql:
+      path: /Users/zengbin/Env/gaojie/gSearch/src/main/resources/template/DynamicSqlTemplete.xml

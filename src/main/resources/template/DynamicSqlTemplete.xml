@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dynamicSql>
+	<nodeMapping>
+		<id>1</id>
+		<cron><!-- 构建索引定时任务的执行时间 -->
+			* * 0/5 * * ?
+		</cron>
+		<field><!-- 需要构建的成document的字段值，跟下面sql里面的查询条件别名一一对应 -->
+			id,productName,firstCategoryId,firstCategoryName,secondCategoryId,secondCategoryName,thirdCategoryId,thirdCategoryName,brandName,color,sex,season
+		</field>
+		<sql><!-- 需要构建索引的sql语句 -->
+			SELECT
+				t1.id id,
+				t1.product_name productName,
+				t2.id firstCategoryId,
+				t2.`name` firstCategoryName,
+				t3.id secondCategoryId,
+				t3.`name` secondCategoryName,
+				t4.id thirdCategoryId,
+				t4.`name` thirdCategoryName,
+				t5.`name` brandName,
+				t1.color color,
+				t1.sex sex,
+				t1.season season
+			FROM
+				t_product t1
+				LEFT JOIN t_category t2 ON t1.first_category_id = t2.id
+				LEFT JOIN t_category t3 ON t2.id = t3.parent_id
+				LEFT JOIN t_category t4 ON t3.id = t4.parent_id
+				LEFT JOIN t_brand t5 ON t1.product_brand_id = t5.id
+		</sql>
+	</nodeMapping>
+</dynamicSql>
