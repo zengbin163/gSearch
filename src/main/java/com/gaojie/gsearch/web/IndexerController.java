@@ -48,10 +48,10 @@ public class IndexerController {
 			logger.warn("the build index doc sql id={}", temp.getId());
 			map.put("sqlId", temp.getSql());
 			if (null == sqlId) {
-				this.gSearchSqlExecution.execute(temp.getSql());
+				this.gSearchSqlExecution.execute(temp.getSql()); //如果sqlId不传入就构建全文索引
 			} else {
 				if (sqlId.equals(temp.getId())) {
-					this.gSearchSqlExecution.execute(temp.getSql());
+					this.gSearchSqlExecution.execute(temp.getSql()); //如果sqlId传入，就构建指定的sqlId索引
 				}
 			}
 		}

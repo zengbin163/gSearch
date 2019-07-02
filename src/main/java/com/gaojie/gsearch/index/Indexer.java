@@ -53,7 +53,7 @@ public class Indexer {
 			String docId = id + indexId;
 			++indexId;
 			logger.info("the build index doc Id = {}", docId);
-			request.id(docId).opType("create").source(map,XContentType.JSON);
+			request.id(docId).opType("create").source(map, XContentType.JSON);
 			IndexResponse response = client.index(request, RequestOptions.DEFAULT);
 			logger.info("response.status = {}", response.status());
 		}

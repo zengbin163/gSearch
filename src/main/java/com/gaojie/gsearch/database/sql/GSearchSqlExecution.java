@@ -40,7 +40,7 @@ public class GSearchSqlExecution {
 		for (Long currentPage = 1L; currentPage <= totalPages; currentPage++) {
 			IPage<Map<String, Object>> pages = this.gSearchSqlService.getResultByPage(sql, currentPage, IndexerParam.SELECT_PAGE_SIZE);
 			List<Map<String, Object>> listMap = pages.getRecords();
-			indexer.build(IndexerParam.INDEX_SEARCH_INDEXER, indexId.toString(), listMap);
+			this.indexer.build(IndexerParam.INDEX_SEARCH_INDEXER, indexId.toString(), listMap);
 			++indexId;
 		}
 		logger.info("=========构建索引执行总数 = {} ==========", total);

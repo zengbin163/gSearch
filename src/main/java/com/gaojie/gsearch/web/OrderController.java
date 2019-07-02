@@ -52,12 +52,11 @@ public class OrderController {
 	@Autowired
 	private Gson gson;
 
-	@SuppressWarnings({ "unchecked" })
 	@GetMapping("/order/getById/{id}")
 	public Map<String, Object> getOrder(@PathVariable("id") String id) {
 //		GetRequest getRequest = new GetRequest("order", id);
 		GetRequest getRequest = new GetRequest(IndexerParam.INDEX_SEARCH_INDEXER, id);
-		Map map = new HashMap();
+		Map<String,Object> map = new HashMap<String,Object>();
 		GetResponse response = null;
 		try {
 			response = client.get(getRequest, RequestOptions.DEFAULT);
@@ -104,12 +103,11 @@ public class OrderController {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@PostMapping("/order/create")
 	public Map<String, Object> createOrder(@RequestParam("buyer") String buyer, @RequestParam("date") String date,
 			@RequestParam("totalPrice") Double total, @RequestParam("products") String products,
 			@RequestParam("id") String id) {
-		Map map = new HashMap();
+		Map<String,Object> map = new HashMap<String,Object>();
 		XContentBuilder builder = null;
 		IndexRequest request = new IndexRequest("order");
 		List<Product> productList = gson.fromJson(products, new TypeToken<List<Product>>() {

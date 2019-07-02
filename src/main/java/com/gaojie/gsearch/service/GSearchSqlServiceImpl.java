@@ -25,7 +25,6 @@ public class GSearchSqlServiceImpl implements GSearchSqlService {
         return this.gSearchSqlDao.executeCountDynamicSql(sqlCount);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public IPage<Map<String, Object>> getResultByPage(String sql, Long currentPage, Long pageSize) {
         if (currentPage < 1) {
@@ -33,7 +32,7 @@ public class GSearchSqlServiceImpl implements GSearchSqlService {
         }
         Long pageIndex = (currentPage - 1) * pageSize;
         List<Map<String, Object>> list = this.gSearchSqlDao.executeDynamicSql(sql, pageIndex, pageSize);
-        IPage<Map<String, Object>> page = new Page();
+        IPage<Map<String, Object>> page = new Page<Map<String, Object>>();
         page.setCurrent(currentPage);
         page.setSize(pageSize);
         page.setRecords(list);
