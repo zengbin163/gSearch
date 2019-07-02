@@ -1,2 +1,3 @@
-# gSearch
-Elasticsearch
+工程说明：基于Elasticsearch搭建分布式搜索引擎平台 <br/>
+版权所有：杭州高街科技有限公司 <br/>
+公司介绍：一家专注于跨境电商公司，也许是你最好的选择

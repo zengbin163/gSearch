@@ -54,6 +54,11 @@
 			<artifactId>elasticsearch</artifactId>
 			<version>7.1.1</version>
 		</dependency>
+	    <dependency>
+	        <groupId>org.elasticsearch</groupId>
+	        <artifactId>elasticsearch-analysis-ik</artifactId>
+	        <version>7.0.0</version>
+		</dependency>
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
