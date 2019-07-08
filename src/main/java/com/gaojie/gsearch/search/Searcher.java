@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.get.GetRequest;
@@ -13,6 +14,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -58,6 +60,7 @@ public class Searcher {
 		if (null == paramMap) {
 			throw new IllegalArgumentException("paramMap is null");
 		}
+		
 		SearchRequest request = new SearchRequest(index);
 		// 构造bool查询
 		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -65,10 +68,13 @@ public class Searcher {
 			boolQueryBuilder.must(QueryBuilders.matchQuery(entry.getKey(), entry.getValue()));
 		}
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		searchSourceBuilder.query(QueryBuilders.matchAllQuery()); 
 		// 排序
 		//searchSourceBuilder.sort(SortBuilders.fieldSort(IndexerParam.SEARCH_SORTED_PARAM).order(SortOrder.DESC));
 		// 分页
 		searchSourceBuilder.from(pageStart).size(pageSize).query(boolQueryBuilder);
+		//设置一个可选的超时，控制允许搜索的时间
+		searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
 		request.searchType(SearchType.DEFAULT).source(searchSourceBuilder);
 		List<Map<String, Object>> list = new ArrayList<>();
 		for (SearchHit s : client.search(request, RequestOptions.DEFAULT).getHits().getHits()) {
