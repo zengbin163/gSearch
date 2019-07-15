@@ -47,11 +47,12 @@ public class IndexerController {
 		for (DynamicSqlTemplete temp : tempList) {
 			logger.warn("the build index doc sql id={}", temp.getId());
 			map.put("sqlId", temp.getSql());
+			String executeSql = String.format(temp.getSql(), temp.getModifyTime());
 			if (null == sqlId) {
-				this.gSearchSqlExecution.execute(temp.getSql()); //如果sqlId不传入就构建全文索引
+				this.gSearchSqlExecution.execute(executeSql); //如果sqlId不传入就构建全文索引
 			} else {
 				if (sqlId.equals(temp.getId())) {
-					this.gSearchSqlExecution.execute(temp.getSql()); //如果sqlId传入，就构建指定的sqlId索引
+					this.gSearchSqlExecution.execute(executeSql); //如果sqlId传入，就构建指定的sqlId索引
 				}
 			}
 		}

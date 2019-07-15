@@ -26,7 +26,6 @@ public class DynamicSqlResolverTest {
 				DynamicSqlTemplete temp = tempList.get(i);
 				System.out.println("======第" + i + "行参数======");
 				System.out.println("id:" + temp.getId());
-				System.out.println("field:" + temp.getField());
 				System.out.println("sql:" + temp.getSql());
 				System.out.println("parase sql:" + temp.getSql().replaceAll("(\r\n|\r|\n|\n\r)", ""));
 				System.out.println("cron:" + temp.getCron());

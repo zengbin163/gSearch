@@ -30,8 +30,6 @@ public class IndexerTest {
 	public void build() throws IOException {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String,Object> map = new HashMap<String,Object>();
-		//id,productName,firstCategoryId,firstCategoryName,secondCategoryId,secondCategoryName,thirdCategoryId,
-		//thirdCategoryName,brandName,color,sex,season
 		map.put("id", 11);
 		map.put("productName", "Gucci1");
 		map.put("firstCategoryId", 11);
@@ -77,7 +75,6 @@ public class IndexerTest {
 		list.add(map);
 		
 		this.indexer.build(IndexerParam.INDEX_SEARCH_INDEXER, "1000", list);
-
 	}
 	
 	@Test

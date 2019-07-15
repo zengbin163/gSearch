@@ -72,11 +72,9 @@ public class Indexer {
 				String key = entry.getKey().toLowerCase();
 				Object value = entry.getValue();
 				if (null != entry.getValue() && entry.getValue() instanceof String) {
-					mapping.startObject(key).field(key, value).field("type", "text").field("store", "yes")
-							.field("analyzer", "ik_smart").field("search_analyzer", "ik_max_word").endObject();
+					mapping.startObject(key).field(key, value).field("type", "text").field("store", "yes").field("analyzer", "ik_smart").field("search_analyzer", "ik_max_word").endObject();
 				} else {
-					mapping.startObject(key).field(key, value).field("type", "integer").field("index", "not_analyzed")
-							.endObject();
+					mapping.startObject(key).field(key, value).field("type", "integer").field("index", "not_analyzed").endObject();
 				}
 			}
 			mapping.endObject();

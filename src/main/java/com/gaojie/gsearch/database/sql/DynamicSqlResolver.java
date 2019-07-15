@@ -73,16 +73,16 @@ public class DynamicSqlResolver {
                     temp.setId(id);
                 }
 			    
-			    if(null==e.element("field") || StringUtils.isBlank(e.element("field").getStringValue())) {
-                    throw new IllegalArgumentException("DynamicSqlTemplate \'field\' is null");
-                } else {
-                    temp.setField(this.replaceX(e.element("field").getStringValue()));
-                }
-			    
                 if (null == e.element("sql") || StringUtils.isBlank(e.element("sql").getStringValue())) {
                     throw new IllegalArgumentException("DynamicSqlTemplate \'sql\' is null");
                 } else {
                     temp.setSql(this.replaceX(e.element("sql").getStringValue()));
+                }
+                
+                if (null == e.element("field") || StringUtils.isBlank(e.element("field").getStringValue())) {
+                	throw new IllegalArgumentException("DynamicSqlTemplate \'field\' is null");
+                } else {
+                	temp.setModifyTime(this.replaceX(e.element("field").getStringValue()));
                 }
 
                 if (null == e.element("cron") || StringUtils.isBlank(e.element("cron").getStringValue())) {

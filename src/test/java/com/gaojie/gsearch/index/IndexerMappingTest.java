@@ -36,14 +36,12 @@ public class IndexerMappingTest {
 
 	@Test
 	public void build() throws IOException {
-
 		this.createIndex();
-
 	}
 
 	public XContentBuilder createIndex() throws IOException {
 		String index = "zengbintest";
-		String docId = "1000";
+		String docId = "1000" + System.currentTimeMillis();
 		IndexRequest request = new IndexRequest(index);
 
 		XContentBuilder mapping = null;
@@ -52,12 +50,9 @@ public class IndexerMappingTest {
 		mapping.startObject("properties");
 		for (int i = 0; i < 100; i++) {
 			mapping.startObject("title1").field("type", "string").field("title", "张三").endObject();
-			mapping.startObject("question1").field("type", "string").field("question", "服装")
-					.field("analyzer", "ik_max_word").endObject();
-			mapping.startObject("answer").field("type", "text").field("answer", "西装").field("analyzer", "ik_max_word")
-					.endObject();
-			mapping.startObject("category").field("type", "text").field("category", "服装西装")
-					.field("analyzer", "ik_max_word").endObject();
+			mapping.startObject("question").field("type", "string").field("question", "服装").field("analyzer", "ik_max_word").endObject();
+			mapping.startObject("answer").field("type", "text").field("answer", "西装").field("analyzer", "ik_max_word").endObject();
+			mapping.startObject("category").field("type", "text").field("category", "服装西装").field("analyzer", "ik_max_word").endObject();
 			mapping.startObject("author").field("type", "string").field("index", "not_analyzed").endObject();
 			mapping.startObject("date").field("type", "string").field("index", "not_analyzed").endObject();
 			mapping.startObject("answer_author").field("type", "string").field("index", "not_analyzed").endObject();
@@ -67,7 +62,6 @@ public class IndexerMappingTest {
 			mapping.startObject("read_count").field("type", "integer").field("index", "not_analyzed").endObject();
 		}
 		// 关联数据
-		// mapping.startObject("list").field("type", "object").endObject();
 		mapping.endObject();
 		mapping.endObject();
 		request.id(docId).opType("create").source(mapping, XContentType.JSON);
@@ -79,7 +73,7 @@ public class IndexerMappingTest {
 
 	public void createIndex2() throws IOException {
 		String index = "zengbintest";
-		String docId = "1000";
+		String docId = "1000" + System.currentTimeMillis();
 		IndexRequest request = new IndexRequest(index);
 		JSONObject list = new JSONObject();
 		for (int i = 0; i < 10; i++) {
@@ -108,7 +102,6 @@ public class IndexerMappingTest {
 			map.put("author", "曾斌" + i);
 			map.put("index", "not_analyzed");
 			listMap.add(map);
-
 			list.put("key" + i, listMap);
 		}
 		// 关联数据
@@ -118,16 +111,5 @@ public class IndexerMappingTest {
 		IndexResponse response = client.index(request, RequestOptions.DEFAULT);
 		logger.info("response.status = {}", response.status());
 	}
-
-//	public void addIndexData() throws IOException {
-//		IndexResponse response = client.prepareIndex("pages", "sina", null)
-//				.setSource(jsonBuilder().startObject().field("article_title", "title".getBytes())
-//						.field("article_content", "content".getBytes()).field("article_url", "url".getBytes())
-//						.endObject())
-//				.execute().actionGet();
-//
-//		client.close();
-//
-//	}
 
 }
