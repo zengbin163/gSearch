@@ -9,7 +9,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 
 /**
  * @desc
- * @author 台州银行:曾斌
+ * @author famiao:曾斌
  * @version 创建时间：Jul 8, 2019 2:44:34 PM
  */
 public class KafkaProducerService {
