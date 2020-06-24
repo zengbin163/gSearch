@@ -2,36 +2,57 @@
 <dynamicSql>
 	<nodeMapping>
 		<id>1</id>
-		<cron><!-- 构建索引定时任务的执行时间 -->
-			* * 0/5 * * ?
-		</cron>
 		<field><!-- 时间戳，大于这个时间戳的数据才能被构建成索引，这里先暂时写死一个时间，合理的做法应该单独抽到服务器作为一个文件 -->
 			2019-05-01
 		</field>
+		<index>famiao_lawer</index>
 		<sql><!-- 需要构建索引的sql语句 %s字符串类型，%d整数类型 -->
 			SELECT
-				t1.id id,
-				t1.product_name productName,
-				t2.id firstCategoryId,
-				t2.`name` firstCategoryName,
-				t3.id secondCategoryId,
-				t3.`name` secondCategoryName,
-				t4.id thirdCategoryId,
-				t4.`name` thirdCategoryName,
-				t5.`name` brandName,
-				t1.color color,
-				t1.sex sex,
-				t1.season season,
-				tt.storeNumber storeNumber
+			    (@a :=@a + 1) AS rowno,
+				t1.mobile mobile,
+				t1.real_name realName,
+				t1.user_name userName,
+				p.area_name province,
+				c.area_name city,
+				a.area_name area,
+				t2.sex sex,
+				t4.law_office_name lawOfficeName,
+				t4.law_office_addr lawOfficeAddr,
+				t4.lawer_self_evaluation lawerSelfEvaluation,
+				DATE_FORMAT(t4.operation_time,"%Y-%m-%d") operationTime,
+				t4.qualification_number qualificationNumber 
 			FROM
-				t_product t1
-				LEFT JOIN t_category t2 ON t1.first_category_id = t2.id
-				LEFT JOIN t_category t3 ON t2.id = t3.parent_id
-				LEFT JOIN t_category t4 ON t3.id = t4.parent_id
-				LEFT JOIN t_brand t5 ON t1.product_brand_id = t5.id
-				LEFT JOIN (SELECT product_id, sum( store_number ) AS storeNumber FROM t_product_stock GROUP BY product_id ) tt ON t1.id = tt.product_id 
-			WHERE
-				t1.modify_time > %s 
+			    (SELECT @a := 0) t1,
+				USER t1
+				LEFT JOIN user_cache t2 ON t1.uuid = t2.user_id
+				LEFT JOIN sys_area p ON t2.province = p.area_code
+				LEFT JOIN sys_area c ON t2.city = c.area_code
+				LEFT JOIN sys_area a ON t2.area = a.area_code
+				LEFT JOIN user_base_info t3 ON t2.user_id = t3.user_id
+				LEFT JOIN lawer_info t4 ON t3.user_id = t4.user_id
+		 </sql>
+	</nodeMapping>
+	<nodeMapping>
+		<id>2</id>
+		<field><!-- 时间戳，大于这个时间戳的数据才能被构建成索引，这里先暂时写死一个时间，合理的做法应该单独抽到服务器作为一个文件 -->
+			2019-05-01
+		</field>
+		<index>famiao_asset</index>
+		<sql><!-- 需要构建索引的sql语句 %s字符串类型，%d整数类型 -->
+			SELECT
+			    (@a :=@a + 1) AS rowno,
+				t2.real_name assetRealName,
+				t1.asset_no assetNo,
+				t1.asset_name assetName,
+				t1.asset_evaluate_amount assetEvaluateAmount,
+				t1.asset_market_amount assetMarketAmount,
+				t1.service_amount serviceAmount,
+				t1.asset_desc assetDesc,
+				DATE_FORMAT(t1.show_time,"%Y-%m-%d") showTime
+			FROM
+			    (SELECT @a := 0) t1,
+				asset_info t1
+				LEFT JOIN USER t2 ON t1.user_id = t2.uuid
 		 </sql>
 	</nodeMapping>
 </dynamicSql>

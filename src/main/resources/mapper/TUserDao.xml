@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gaojie.gsearch.dao.TUserDao">
+<mapper namespace="com.famiao.search.dao.TUserDao">
 
-    <select id="getUserForTestMapperLocation" resultType="com.gaojie.gsearch.vo.entity.TUser">
-        select * from t_app_user limit 2;
+    <select id="getUserForTestMapperLocation" resultType="com.famiao.search.vo.entity.TUser">
+        select * from user
     </select>
-    <select id="getUserById" parameterType="int" resultType="com.gaojie.gsearch.vo.entity.TUser">
-        select id id,
-        	   name name,
-        	   phone phone,
-        	   real_name realName
-        from t_app_user where id = #{id};
+    <select id="getUserByUUId" parameterType="string" resultType="com.famiao.search.vo.entity.TUser">
+        select uuid uuid,
+        	   user_name userName,
+        	   real_name realName,
+        	   nick_name nickName,
+        	   mobile mobile
+        from user where uuid = #{uuid};
     </select>
 
 </mapper>

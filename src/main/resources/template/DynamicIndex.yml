@@ -1,0 +1,7 @@
+#创建集合索引别名
+POST /_aliases
+{
+   "actions" : [
+       { "add" : { "index" : "famiao*", "alias" : "searchfamiao" } }
+   ]
+}
