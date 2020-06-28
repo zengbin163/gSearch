@@ -5,3 +5,45 @@ POST /_aliases
        { "add" : { "index" : "famiao*", "alias" : "searchfamiao" } }
    ]
 }
+
+#各个分片、索引的fielddata在内存中的占用情况
+GET /_stats/fielddata?fields=* 
+#每个node的fielddata在内存中的占用情况
+GET /_nodes/stats/indices/fielddata?fields=*
+#每个node中的每个索引的fielddata在内存中的占用情况
+GET /_nodes/stats/indices/fielddata?level=indices&fields=*
+
+#当ES进行排序sort、统计aggs时，ES把涉及到的字段数据全部读取到内存JVM Heap中进行操作，默认情况fielddata是关闭的
+PUT famiao_lawer/_mapping/
+{
+    "properties":{
+        "mobile":{
+            "type":"text",
+            "fielddata":true
+        }
+    }
+}
+
+#排序
+GET /searchfamiao/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "sort": [
+    {
+      "operationTime": {
+        "order": "desc",
+        "missing" : "_last"
+      }
+    },
+    {
+      "mobile": {
+        "order": "asc",
+        "missing" : "_last"
+      }    
+    },
+    "_score"
+  ]
+}
+

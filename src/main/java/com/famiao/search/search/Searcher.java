@@ -65,7 +65,7 @@ public class Searcher {
         // 构造bool查询
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
-            boolQueryBuilder.must(QueryBuilders.matchQuery(entry.getKey(), entry.getValue()));
+            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery(entry.getKey(), entry.getValue()));
         }
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.matchAllQuery());

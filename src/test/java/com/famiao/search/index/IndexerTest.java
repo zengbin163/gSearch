@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.famiao.search.base.IndexerParam;
+
 /**
  * @desc
  * @author 曾斌
@@ -78,6 +80,12 @@ public class IndexerTest {
 	@Test
 	public void exists() throws IOException {
 		System.out.println(this.indexer.exists(null));
+	}
+	
+	@Test
+	public void createAliases() throws IOException {
+	    indexer.createAliases("famiao_lawer", IndexerParam.SEARCH_INDEX_ALIAS);
+	    indexer.createAliases("famiao_asset", IndexerParam.SEARCH_INDEX_ALIAS);
 	}
 
 }

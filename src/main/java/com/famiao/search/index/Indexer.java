@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
+import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.famiao.search.base.IndexerParam;
 
 /**
  * @desc
@@ -73,7 +76,10 @@ public class Indexer {
             
             request.add(new IndexRequest(index).id(indexId).opType("create").source(json, XContentType.JSON));
 		}
+		//创建索引
         BulkResponse bulkResponse = client.bulk(request, RequestOptions.DEFAULT);
+        //创建别名
+        this.createAliases(index, IndexerParam.SEARCH_INDEX_ALIAS);
         logger.info(index + " response.status = {}", bulkResponse.status());
 	}
 
@@ -147,6 +153,21 @@ public class Indexer {
 		request.includeDefaults(false);
 		request.indicesOptions(IndicesOptions.STRICT_EXPAND_OPEN);
 		return this.client.indices().exists(request, RequestOptions.DEFAULT);
+	}
+	
+	/**
+	 * 创建多个索引联合别名
+	 * @param indexName
+	 * @return
+	 * @throws IOException
+	 */
+	public boolean createAliases(String indexName, String aliasName) throws IOException {
+        AliasActions actions = new AliasActions(AliasActions.Type.ADD);
+        actions = actions.index(indexName).alias(aliasName);
+        IndicesAliasesRequest indicesAliasesRequest = new IndicesAliasesRequest();
+        indicesAliasesRequest.addAliasAction(actions);
+        AcknowledgedResponse response = this.client.indices().updateAliases(indicesAliasesRequest, RequestOptions.DEFAULT);
+        return response.isAcknowledged();
 	}
 
 }
