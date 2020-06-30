@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @TableName(value = "user", keepGlobalPrefix = false)
-public class TUser extends Model<TUser> {
+public class User extends Model<User> {
 
     private static final long serialVersionUID = -4972030881763418909L;
     @TableId(value = "uuid", type = IdType.ASSIGN_ID)
@@ -25,9 +25,9 @@ public class TUser extends Model<TUser> {
     private String nickName;
     private String mobile;
 
-    public TUser() {}
+    public User() {}
 
-    public TUser(String uuid, String userName, String realName, String nickName, String mobile) {
+    public User(String uuid, String userName, String realName, String nickName, String mobile) {
         this.uuid = uuid;
         this.userName = userName;
         this.realName = realName;

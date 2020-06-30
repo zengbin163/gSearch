@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.famiao.search.service.user.UserService;
-import com.famiao.search.vo.entity.TUser;
+import com.famiao.search.vo.entity.User;
 
 /**
  * @author zengbin
@@ -20,13 +20,13 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/user/get")
-    public TUser get(@RequestParam("uuid") String uuid) {
+    public User get(@RequestParam("uuid") String uuid) {
         return userService.getUserByUUId(uuid);
     }
 
     @GetMapping("/user/pageList")
-    public IPage<TUser> pageList(@RequestParam("current") long current,@RequestParam("size") long size) {
-        Page<TUser> page = new Page<TUser>();
+    public IPage<User> pageList(@RequestParam("current") long current,@RequestParam("size") long size) {
+        Page<User> page = new Page<User>();
         page.setCurrent(current);
         page.setSize(size);
         return userService.getUserForTestMapperLocation(page);

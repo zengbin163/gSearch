@@ -5,23 +5,23 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.famiao.search.dao.TUserDao;
+import com.famiao.search.dao.UserDao;
 import com.famiao.search.service.user.UserService;
-import com.famiao.search.vo.entity.TUser;
+import com.famiao.search.vo.entity.User;
 
 @Service(value = "userService")
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private TUserDao userDao;
+    private UserDao userDao;
 
     @Override
-    public IPage<TUser> getUserForTestMapperLocation(Page<TUser> page) {
+    public IPage<User> getUserForTestMapperLocation(Page<User> page) {
         return this.userDao.getUserForTestMapperLocation(page);
     }
 
     @Override
-    public TUser getUserByUUId(String uuid) {
+    public User getUserByUUId(String uuid) {
         return this.userDao.getUserByUUId(uuid);
     }
 
