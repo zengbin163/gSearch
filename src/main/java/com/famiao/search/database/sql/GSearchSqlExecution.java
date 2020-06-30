@@ -30,16 +30,19 @@ public class GSearchSqlExecution {
 	
 	private static final Logger logger = LoggerFactory.getLogger(GSearchSqlExecution.class);
 
-	public void execute(String sql, String indexName) throws Exception {
+	public void execute(String sql, String indexName, String mapping) throws Exception {
 		if (StringUtils.isBlank(sql)) {
 			throw new IllegalArgumentException("执行sql为空");
 		}
+		//构建索引文件
+        this.indexer.build(indexName, mapping);
+		//写入索引数据
 		Long total = this.gSearchSqlService.countResultByPage(sql);
 		Long totalPages = total % IndexerParam.SELECT_PAGE_SIZE == 0 ? total / IndexerParam.SELECT_PAGE_SIZE : total / IndexerParam.SELECT_PAGE_SIZE + 1;
 		for (Long currentPage = 1L; currentPage <= totalPages; currentPage++) {
 			IPage<Map<String, Object>> pages = this.gSearchSqlService.getResultByPage(sql, currentPage, IndexerParam.SELECT_PAGE_SIZE);
 			List<Map<String, Object>> listMap = pages.getRecords();
-			this.indexer.build(indexName, listMap);
+			this.indexer.bulkIndex(indexName, listMap);
 		}
 		logger.info("=========构建索引执行总数 = {} ==========", total);
 	}

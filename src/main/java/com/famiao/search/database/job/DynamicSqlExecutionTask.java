@@ -47,7 +47,7 @@ public class DynamicSqlExecutionTask implements SchedulingConfigurer {
                     for (DynamicSqlTemplate temp : tempList) {
                         System.out.println("-----DynamicExecutionTask 开始执行构建索引-----" + temp.getIndex() + "-----" + System.currentTimeMillis());
                         String executeSql = temp.getSql();
-                        execution.execute(executeSql, temp.getIndex());
+                        execution.execute(executeSql, temp.getIndex(), temp.getMapping());
                         System.out.println("-----DynamicExecutionTask 结束执行构建索引-----" + temp.getIndex() + "-----" + System.currentTimeMillis());
                     }
                 } catch (Exception e) {

@@ -27,7 +27,7 @@ public class GSearchSqlExecutionTest {
 				DynamicSqlTemplate temp = tempList.get(i);
 				System.out.println("======第" + (i+1) + "条sql执行======");
 				System.out.println("sql:" + temp.getSql());
-				this.gSearchSqlExecution.execute(temp.getSql(), temp.getIndex());
+				this.gSearchSqlExecution.execute(temp.getSql(), temp.getIndex(), temp.getMapping());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

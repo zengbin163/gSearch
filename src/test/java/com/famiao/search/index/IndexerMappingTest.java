@@ -8,6 +8,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -203,6 +204,25 @@ public class IndexerMappingTest {
         }
         BulkResponse bulkResponse2 = client.bulk(request2, RequestOptions.DEFAULT);
         logger.info(index2 + " response.status = {}", bulkResponse2.status());
+    }
+    
+    @Test
+    public void mapping() throws Exception {
+        //使用官方提供的工具构建json。可以直接拼接一个json字符串，也可以使用map嵌套。
+        XContentBuilder jsonMapping = XContentFactory.jsonBuilder();
+        //所有数据类型 看官方文档:https://www.elastic.co/guide/en/elasticsearch/reference/7.4/mapping-types.html#_core_datatypes
+        jsonMapping.startObject().startObject("properties")
+                .startObject("testId").field("type", "long").endObject()
+                .startObject("price").field("type", "double").endObject()
+                //keyword类型不会分词存储
+                .startObject("name").field("type", "keyword").endObject()
+                //指定分词器
+                .startObject("content").field("type", "text").field("analyzer", "ik_max_word").endObject()
+                .startObject("createTime").field("type", "date").field("format", "yyyy-MM-dd HH:mm:ss").endObject()
+                .endObject().endObject();
+        CreateIndexRequest request = new CreateIndexRequest("test");
+        request.mapping(jsonMapping);
+        System.out.println(jsonMapping.toString());
     }
 
 }

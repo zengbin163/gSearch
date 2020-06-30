@@ -15,7 +15,7 @@ import com.famiao.search.vo.entity.TUser;
  * @Date 2019/6/8 14:27
  */
 @RestController
-public class TUserController {
+public class UserController {
     @Autowired
     private UserService userService;
 

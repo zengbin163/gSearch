@@ -23,8 +23,8 @@ public class EsConfig {
 	private Integer port;
 	@Value("${es.scheme}")
 	private String scheme;
-	@Value("${es.host}")
-	private String host;
+	@Value("${es.hosts}")
+	private String hosts;
 
 	@Bean
 	public Gson gson() {
@@ -33,7 +33,12 @@ public class EsConfig {
 
 	@Bean
 	public RestHighLevelClient client() {
-		RestClientBuilder restClientBuilder = RestClient.builder(new HttpHost(host, port, scheme)).setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
+        String[] hostArray = hosts.split(",");
+        HttpHost[] hostHosts = new HttpHost[hostArray.length];
+        for (int i = 0; i < hostArray.length; i++) {
+            hostHosts[i] = new HttpHost(hostArray[i], port, scheme);
+        }
+		RestClientBuilder restClientBuilder = RestClient.builder(hostHosts).setRequestConfigCallback(new RestClientBuilder.RequestConfigCallback() {
 					@Override
 					public RequestConfig.Builder customizeRequestConfig(RequestConfig.Builder requestConfigBuilder) {
 						return requestConfigBuilder.setConnectTimeout(5000) // 连接超时（默认为1秒）

@@ -77,6 +77,12 @@ public class DynamicSqlResolver {
                     temp.setId(id);
                 }
 			    
+			    if (null == e.element("mapping") || StringUtils.isBlank(e.element("mapping").getStringValue())) {
+			        throw new IllegalArgumentException("DynamicSqlTemplate \'sql\' is null");
+			    } else {
+			        temp.setMapping(this.replaceX(e.element("mapping").getStringValue()));
+			    }
+			    
                 if (null == e.element("sql") || StringUtils.isBlank(e.element("sql").getStringValue())) {
                     throw new IllegalArgumentException("DynamicSqlTemplate \'sql\' is null");
                 } else {
@@ -119,6 +125,12 @@ public class DynamicSqlResolver {
             Element e = it.next();
             if ("nodeMapping".equals(e.getName()) && sqlId.equals(Integer.valueOf(this.replaceX(e.element("id").getStringValue())))) {
                 temp.setId(Integer.valueOf(this.replaceX(e.element("id").getStringValue())));
+                
+                if (null == e.element("mapping") || StringUtils.isBlank(e.element("mapping").getStringValue())) {
+                    throw new IllegalArgumentException("DynamicSqlTemplate \'sql\' is null");
+                } else {
+                    temp.setMapping(this.replaceX(e.element("mapping").getStringValue()));
+                }
                 
                 if (null == e.element("sql") || StringUtils.isBlank(e.element("sql").getStringValue())) {
                     throw new IllegalArgumentException("DynamicSqlTemplate \'sql\' is null");

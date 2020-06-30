@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -19,12 +20,16 @@ import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -41,46 +46,74 @@ public class Indexer {
 
 	@Autowired
 	private RestHighLevelClient client;
+	
+    @Value("${es.cluster.name}")
+    private String clusterName;
+    @Value("${es.index.shards}")
+    private Integer indexShardsNum;
+    @Value("${es.index.replicas}")
+    private Integer indexReplicasNum;
+	
 	private static final Logger logger = LoggerFactory.getLogger(Indexer.class);
 
 	/**
-	 * 构建索引
+	 * 创建索引目录
 	 * 
 	 * @throws IOException
 	 */
-	public void build(String index, List<Map<String, Object>> list) throws IOException {
+	public boolean build(String index, String mapping) throws IOException {
 		if (StringUtils.isBlank(index)) {
 			throw new IllegalArgumentException("Index is null");
-		}
-		if (CollectionUtils.isEmpty(list)) {
-			throw new IllegalArgumentException("list is null");
 		}
 		if (this.exists(index)) {
 			boolean isAcknowledged = this.delete(index);
 			logger.warn("delete index isAcknowledged = {}", isAcknowledged);
 		}
-        BulkRequest request = new BulkRequest();
-		for (Map<String, Object> map : list) {
-            JSONObject json = new JSONObject();
-            String indexId = null;
-		    for (Map.Entry<String, Object> entry : map.entrySet()) {
-				String key = entry.getKey();
-				Object value = entry.getValue();
-                json.put(key, value);
-                if("rowno".equals(key)) {
-                    indexId = value.toString();
-                }
-			}
-            json.put("analyzer", "ik_max_word");
-            json.put("search_analyzer", "ik_smart");
-            
-            request.add(new IndexRequest(index).id(indexId).opType("create").source(json, XContentType.JSON));
-		}
-		//创建索引
-        BulkResponse bulkResponse = client.bulk(request, RequestOptions.DEFAULT);
-        //创建别名
-        this.createAliases(index, IndexerParam.SEARCH_INDEX_ALIAS);
-        logger.info(index + " response.status = {}", bulkResponse.status());
+		CreateIndexRequest request = new CreateIndexRequest(index);
+		request.settings(this.settings());
+		request.mapping(mapping, XContentType.JSON);
+		request.alias(new Alias(IndexerParam.SEARCH_INDEX_ALIAS));
+        //创建索引
+        CreateIndexResponse indexResponse = this.client.indices().create(request, RequestOptions.DEFAULT);
+        boolean isAcknowledged = indexResponse.isAcknowledged();
+        logger.info(index + " response.isAcknowledged = {}", isAcknowledged);
+        if(isAcknowledged) {
+            logger.info("索引构建成功!");
+            //创建别名
+            this.createAliases(index, IndexerParam.SEARCH_INDEX_ALIAS);
+        }
+        return isAcknowledged;
+	}
+	
+	/**
+	 * 批量插入数据
+	 * 
+	 * @throws IOException
+	 */
+	public void bulkIndex(String index, List<Map<String, Object>> list) throws IOException {
+	    if (StringUtils.isBlank(index)) {
+	        throw new IllegalArgumentException("Index is null");
+	    }
+	    if (CollectionUtils.isEmpty(list)) {
+	        throw new IllegalArgumentException("list is null");
+	    }
+	    BulkRequest request = new BulkRequest();
+	    for (Map<String, Object> map : list) {
+	        JSONObject json = new JSONObject();
+	        String indexId = null;
+	        for (Map.Entry<String, Object> entry : map.entrySet()) {
+	            String key = entry.getKey();
+	            Object value = entry.getValue();
+	            json.put(key, value);
+	            if("rowno".equals(key)) {
+	                indexId = value.toString();
+	            }
+	        }
+	        request.add(new IndexRequest(index).id(indexId).source(json.toJSONString(), XContentType.JSON));
+	    }
+	    //创建索引
+	    BulkResponse bulkResponse = client.bulk(request, RequestOptions.DEFAULT);
+	    logger.info(index + " response.status = {}", bulkResponse.status());
 	}
 
 	/**
@@ -168,6 +201,11 @@ public class Indexer {
         indicesAliasesRequest.addAliasAction(actions);
         AcknowledgedResponse response = this.client.indices().updateAliases(indicesAliasesRequest, RequestOptions.DEFAULT);
         return response.isAcknowledged();
+	}
+	
+	public Settings settings() {
+	    Settings settings = Settings.builder().put("index.number_of_shards", indexShardsNum).put("index.number_of_replicas", indexReplicasNum).build();
+	    return settings;
 	}
 
 }

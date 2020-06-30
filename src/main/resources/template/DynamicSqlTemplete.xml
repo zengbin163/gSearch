@@ -6,6 +6,60 @@
 			2019-05-01
 		</field>
 		<index>famiao_lawer</index>
+		<mapping>
+		  {
+		    "properties": {
+		      "rowno": {
+		        "type": "long"
+		      },
+		      "mobile": {
+		        "type": "keyword"
+		      },
+		      "realName": {
+		        "type": "text",
+		        "analyzer": "ik_max_word",
+				"search_analyzer": "ik_smart"
+		      },
+		      "userName": {
+		        "type": "keyword"
+		      },
+		      "province": {
+		        "type": "keyword"
+		      },
+		      "city": {
+		        "type": "keyword"
+		      },
+		      "area": {
+		        "type": "keyword"
+		      },
+		      "sex": {
+		        "type": "keyword"
+		      },
+		      "lawOfficeName": {
+		        "type": "text",
+		        "analyzer": "ik_max_word",
+				"search_analyzer": "ik_smart"
+		      },
+		      "lawOfficeAddr": {
+		        "type": "text",
+		        "analyzer": "ik_max_word",
+				"search_analyzer": "ik_smart"
+		      },
+		      "lawerSelfEvaluation": {
+		        "type": "text",
+		        "analyzer": "ik_max_word",
+				"search_analyzer": "ik_smart"
+		      },
+		      "operationTime": {
+		        "type": "date",
+				"format": "yyyy-MM-dd HH:mm:ss || yyyy-MM-dd || epoch_millis"
+		      },
+		      "qualificationNumber": {
+		        "type": "keyword"
+		      }
+		    }
+		  }
+		</mapping>
 		<sql><!-- 需要构建索引的sql语句 %s字符串类型，%d整数类型 -->
 			SELECT
 			    (@a :=@a + 1) AS rowno,
@@ -38,6 +92,46 @@
 			2019-05-01
 		</field>
 		<index>famiao_asset</index>
+		<mapping>
+		  {
+		    "properties": {
+		      "rowno": {
+		        "type": "long"
+		      },
+		      "assetRealName": {
+		        "type": "text",
+		        "analyzer": "ik_max_word",
+				"search_analyzer": "ik_smart"
+		      },
+		      "assetNo": {
+		        "type": "keyword"
+		      },
+		      "assetName": {
+		        "type": "text",
+		        "analyzer": "ik_max_word",
+				"search_analyzer": "ik_smart"
+		      },
+		      "assetEvaluateAmount": {
+		        "type": "double"
+		      },
+		      "assetMarketAmount": {
+		        "type": "double"
+		      },
+		      "serviceAmount": {
+		        "type": "double"
+		      },
+		      "assetDesc": {
+		        "type": "text",
+		        "analyzer": "ik_max_word",
+				"search_analyzer": "ik_smart"
+		      },
+		      "showTime": {
+		        "type": "date",
+				"format": "yyyy-MM-dd HH:mm:ss || yyyy-MM-dd || epoch_millis"
+		      }
+		    }
+		  }
+		</mapping>
 		<sql><!-- 需要构建索引的sql语句 %s字符串类型，%d整数类型 -->
 			SELECT
 			    (@a :=@a + 1) AS rowno,
@@ -54,5 +148,67 @@
 				asset_info t1
 				LEFT JOIN USER t2 ON t1.user_id = t2.uuid
 		 </sql>
+	</nodeMapping>
+	<nodeMapping>
+		<id>3</id>
+		<field><!-- 时间戳，大于这个时间戳的数据才能被构建成索引，这里先暂时写死一个时间，合理的做法应该单独抽到服务器作为一个文件 -->
+			2019-05-01
+		</field>
+		<index>famiao_office</index>
+		<mapping>
+		   {
+		    "properties": {
+		      "rowno": {
+		        "type": "long"
+		      },
+		      "officeName": {
+		        "type": "text",
+		        "analyzer": "ik_max_word",
+				"search_analyzer": "ik_smart"
+		      },
+		      "officeCode": {
+		        "type": "keyword"
+		      },
+		      "creditCode": {
+		        "type": "keyword"
+		      },
+		      "legalDelegate": {
+		        "type": "text",
+		        "analyzer": "ik_max_word",
+				"search_analyzer": "ik_smart"
+		      },
+		      "establishDate": {
+		        "type": "date",
+				"format": "yyyy-MM-dd HH:mm:ss || yyyy-MM-dd || epoch_millis"
+		      },
+		      "contactAddr": {
+		        "type": "text",
+		        "analyzer": "ik_max_word",
+				"search_analyzer": "ik_smart"
+		      },
+		      "contactTel": {
+		        "type": "keyword"
+		      },
+		      "orgType": {
+		        "type": "keyword"
+		      }
+		    }
+		  }
+		</mapping>
+		<sql><!-- 需要构建索引的sql语句 %s字符串类型，%d整数类型 -->
+			SELECT
+				( @a := @a + 1 ) AS rowno,
+				t1.office_name officeName,
+				t1.office_code officeCode,
+				t1.credit_code creditCode,
+				t1.legal_delegate legalDelegate,
+				DATE_FORMAT(t1.establish_date,"%Y-%m-%d") establishDate,
+				t1.contact_addr contactAddr,
+				t1.contact_tel contactTel,
+				t1.org_type orgType 
+			FROM
+				( SELECT @a := 0 ) t1,
+				crawler_law_office_info t1
+		</sql>
 	</nodeMapping>
 </dynamicSql>

@@ -74,7 +74,7 @@ public class IndexerTest {
 		map.put("season", "夏季");
 		list.add(map);
 		
-		this.indexer.build(null, list);
+		this.indexer.build(null, null);
 	}
 	
 	@Test

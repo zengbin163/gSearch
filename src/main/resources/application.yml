@@ -2,8 +2,13 @@ server:
    port: 9888
 es:
    port: 9200
-   host: 47.115.34.118
+   hosts: 47.115.34.118,8.129.173.185,8.129.172.251
    scheme: http
+   cluster:
+      name: famiao-cluster
+   index:
+      shards: 3
+      replicas: 1
 spring:
    datasource:
       hikari:
