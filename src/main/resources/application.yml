@@ -17,11 +17,21 @@ spring:
             jdbc-url: jdbc:mysql://47.115.34.118:3306/famiao?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
             username: root
             password: ntVklfM5@VMj2pHd
+            idleTimeout: 60000
+            connectionTimeout: 60000
+            validationTimeout: 3000
+            loginTimeout: 5
+            maxLifetime: 60000
          slave:
             driverClassName: com.mysql.cj.jdbc.Driver
             jdbc-url: jdbc:mysql://47.115.34.118:3306/famiao?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
             username: root
             password: ntVklfM5@VMj2pHd
+            idleTimeout: 60000
+            connectionTimeout: 60000
+            validationTimeout: 3000
+            loginTimeout: 5
+            maxLifetime: 60000
 logging:
    level:
       com.famiao.search: debug
@@ -31,4 +41,4 @@ dynamic:
    settings:
       path: D:\Env\project\fm-search\src\main\resources\template\Settings.json
    cron:
-      expression: 0 0 0/1 * * ?
+      expression: 0 0/20 * * * ?
