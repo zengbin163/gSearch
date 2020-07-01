@@ -21,14 +21,14 @@ import com.famiao.search.service.SearchSqlService;
  *
  */
 @Configuration
-public class SearchSqlExecution {
+public class IndexBuildExecution {
 
 	@Autowired
 	private SearchSqlService searchSqlService;
 	@Autowired
 	private Indexer indexer;
 	
-	private static final Logger logger = LoggerFactory.getLogger(SearchSqlExecution.class);
+	private static final Logger logger = LoggerFactory.getLogger(IndexBuildExecution.class);
 
 	public void execute(String sql, String indexName, String mapping) throws Exception {
 		if (StringUtils.isBlank(sql)) {

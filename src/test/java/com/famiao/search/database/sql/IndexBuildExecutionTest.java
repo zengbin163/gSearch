@@ -12,12 +12,12 @@ import com.famiao.search.database.sql.template.DynamicSqlTemplate;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GSearchSqlExecutionTest {
+public class IndexBuildExecutionTest {
 
 	@Autowired
 	private DynamicSqlResolver dynamicSqlResolver;
 	@Autowired
-	private SearchSqlExecution gSearchSqlExecution;
+	private IndexBuildExecution execution;
 
 	@Test
 	public void test1() {
@@ -27,7 +27,7 @@ public class GSearchSqlExecutionTest {
 				DynamicSqlTemplate temp = tempList.get(i);
 				System.out.println("======第" + (i+1) + "条sql执行======");
 				System.out.println("sql:" + temp.getSql());
-				this.gSearchSqlExecution.execute(temp.getSql(), temp.getIndex(), temp.getMapping());
+				this.execution.execute(temp.getSql(), temp.getIndex(), temp.getMapping());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
