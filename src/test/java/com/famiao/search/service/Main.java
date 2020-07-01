@@ -1,5 +1,9 @@
 package com.famiao.search.service;
 
+import java.io.File;
+
+import cn.hutool.core.io.FileUtil;
+
 /**
  * @desc
  * @author famiao:曾斌
@@ -8,8 +12,9 @@ package com.famiao.search.service;
 public class Main {
 
 	public static void main(String[] args) {
-		String text = String.format("I am a boy,who are %s,I am %d years old", "engineer", 25);
-		System.out.println(text);
+	    File file = new File("D:\\Env\\project\\fm-search\\src\\main\\resources\\template\\Settings.json");
+	    String json = FileUtil.readString(file, "UTF-8");
+	    System.out.println(json);
 	}
 
 }

@@ -14,7 +14,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
 import com.famiao.search.database.sql.DynamicSqlResolver;
-import com.famiao.search.database.sql.GSearchSqlExecution;
+import com.famiao.search.database.sql.SearchSqlExecution;
 import com.famiao.search.database.sql.template.DynamicSqlTemplate;
 
 /**
@@ -30,7 +30,7 @@ public class DynamicSqlExecutionTask implements SchedulingConfigurer {
     @Autowired
     private DynamicSqlResolver resolver;
     @Autowired
-    private GSearchSqlExecution execution;
+    private SearchSqlExecution execution;
 
     @Value("${dynamic.cron.expression}")
     private String cronExpression;

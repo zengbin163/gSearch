@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class GSearchSqlDaoTest {
 
     @Autowired
-    private GSearchSqlDao gSearchSqlDao;
+    private SearchSqlDao gSearchSqlDao;
 
     @Test
     public void test1() {

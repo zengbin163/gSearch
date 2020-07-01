@@ -55,8 +55,28 @@ public class Searcher {
         return map;
     }
 
-    public List<Map<String, Object>> searchList(Integer pageStart, Integer pageSize, Map<String, Object> paramMap)
-        throws Exception {
+    public List<Map<String, Object>> searchList(Integer pageStart, Integer pageSize, String globalParam) throws Exception {
+        String []paramNames = {"realName","province","city","lawOfficeName","assetRealName","assetName"};
+        List<Map<String, Object>> list = new ArrayList<>();
+        SearchRequest request = new SearchRequest(IndexerParam.SEARCH_INDEX_ALIAS);
+        MultiMatchQueryBuilder multiMatchQueryBuilder = QueryBuilders.multiMatchQuery(globalParam, paramNames);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        // 排序
+        // searchSourceBuilder.sort(SortBuilders.fieldSort(IndexerParam.SEARCH_SORTED_PARAM).order(SortOrder.DESC));
+        // 分页
+        searchSourceBuilder.from(pageStart).size(pageSize).query(multiMatchQueryBuilder);
+        // 设置一个可选的超时，控制允许搜索的时间
+        searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
+        request.searchType(SearchType.DEFAULT).source(searchSourceBuilder);
+        SearchHit [] hits = this.client.search(request, RequestOptions.DEFAULT).getHits().getHits();
+        for (SearchHit s : hits) {
+            list.add(s.getSourceAsMap());
+        }
+        return list;
+    }
+    
+    public List<Map<String, Object>> searchList(Integer pageStart, Integer pageSize, Map<String, Object> paramMap) throws Exception {
         if (null == paramMap) {
             throw new IllegalArgumentException("paramMap is null");
         }
@@ -77,28 +97,6 @@ public class Searcher {
         searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
         request.searchType(SearchType.DEFAULT).source(searchSourceBuilder);
         for (SearchHit s : client.search(request, RequestOptions.DEFAULT).getHits().getHits()) {
-            list.add(s.getSourceAsMap());
-        }
-        return list;
-    }
-    
-    public List<Map<String, Object>> searchList(Integer pageStart, Integer pageSize, String globalParam) throws Exception {
-        String []paramNames = {"realName","province","city","lawOfficeName","assetRealName","assetName"};
-        
-        List<Map<String, Object>> list = new ArrayList<>();
-        SearchRequest request = new SearchRequest(IndexerParam.SEARCH_INDEX_ALIAS);
-        MultiMatchQueryBuilder multiMatchQueryBuilder = QueryBuilders.multiMatchQuery(globalParam, paramNames);
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
-        // 排序
-        // searchSourceBuilder.sort(SortBuilders.fieldSort(IndexerParam.SEARCH_SORTED_PARAM).order(SortOrder.DESC));
-        // 分页
-        searchSourceBuilder.from(pageStart).size(pageSize).query(multiMatchQueryBuilder);
-        // 设置一个可选的超时，控制允许搜索的时间
-        searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
-        request.searchType(SearchType.DEFAULT).source(searchSourceBuilder);
-        SearchHit [] hits = this.client.search(request, RequestOptions.DEFAULT).getHits().getHits();
-        for (SearchHit s : hits) {
             list.add(s.getSourceAsMap());
         }
         return list;

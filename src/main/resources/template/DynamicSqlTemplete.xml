@@ -17,8 +17,8 @@
 		      },
 		      "realName": {
 		        "type": "text",
-		        "analyzer": "ik_max_word",
-				"search_analyzer": "ik_smart"
+		        "analyzer": "ikAnalyzer",
+				"search_analyzer": "ikSearchAnalyzer"
 		      },
 		      "userName": {
 		        "type": "keyword"
@@ -37,18 +37,18 @@
 		      },
 		      "lawOfficeName": {
 		        "type": "text",
-		        "analyzer": "ik_max_word",
-				"search_analyzer": "ik_smart"
+		        "analyzer": "ikAnalyzer",
+				"search_analyzer": "ikSearchAnalyzer"
 		      },
 		      "lawOfficeAddr": {
 		        "type": "text",
-		        "analyzer": "ik_max_word",
-				"search_analyzer": "ik_smart"
+		        "analyzer": "ikAnalyzer",
+				"search_analyzer": "ikSearchAnalyzer"
 		      },
 		      "lawerSelfEvaluation": {
 		        "type": "text",
-		        "analyzer": "ik_max_word",
-				"search_analyzer": "ik_smart"
+		        "analyzer": "ikAnalyzer",
+				"search_analyzer": "ikSearchAnalyzer"
 		      },
 		      "operationTime": {
 		        "type": "date",
@@ -100,16 +100,16 @@
 		      },
 		      "assetRealName": {
 		        "type": "text",
-		        "analyzer": "ik_max_word",
-				"search_analyzer": "ik_smart"
+		        "analyzer": "ikAnalyzer",
+				"search_analyzer": "ikSearchAnalyzer"
 		      },
 		      "assetNo": {
 		        "type": "keyword"
 		      },
 		      "assetName": {
 		        "type": "text",
-		        "analyzer": "ik_max_word",
-				"search_analyzer": "ik_smart"
+		        "analyzer": "ikAnalyzer",
+				"search_analyzer": "ikSearchAnalyzer"
 		      },
 		      "assetEvaluateAmount": {
 		        "type": "double"
@@ -122,8 +122,8 @@
 		      },
 		      "assetDesc": {
 		        "type": "text",
-		        "analyzer": "ik_max_word",
-				"search_analyzer": "ik_smart"
+		        "analyzer": "ikAnalyzer",
+				"search_analyzer": "ikSearchAnalyzer"
 		      },
 		      "showTime": {
 		        "type": "date",
@@ -163,8 +163,8 @@
 		      },
 		      "officeName": {
 		        "type": "text",
-		        "analyzer": "ik_max_word",
-				"search_analyzer": "ik_smart"
+		        "analyzer": "ikAnalyzer",
+				"search_analyzer": "ikSearchAnalyzer"
 		      },
 		      "officeCode": {
 		        "type": "keyword"
@@ -174,8 +174,8 @@
 		      },
 		      "legalDelegate": {
 		        "type": "text",
-		        "analyzer": "ik_max_word",
-				"search_analyzer": "ik_smart"
+		        "analyzer": "ikAnalyzer",
+				"search_analyzer": "ikSearchAnalyzer"
 		      },
 		      "establishDate": {
 		        "type": "date",
@@ -183,8 +183,8 @@
 		      },
 		      "contactAddr": {
 		        "type": "text",
-		        "analyzer": "ik_max_word",
-				"search_analyzer": "ik_smart"
+		        "analyzer": "ikAnalyzer",
+				"search_analyzer": "ikSearchAnalyzer"
 		      },
 		      "contactTel": {
 		        "type": "keyword"

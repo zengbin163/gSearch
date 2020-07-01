@@ -28,5 +28,7 @@ logging:
 dynamic:
    sql:
       path: D:\Env\project\fm-search\src\main\resources\template\DynamicSqlTemplete.xml
+   settings:
+      path: D:\Env\project\fm-search\src\main\resources\template\Settings.json
    cron:
       expression: 0 0 0/1 * * ?

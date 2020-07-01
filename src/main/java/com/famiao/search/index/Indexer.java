@@ -23,7 +23,6 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.slf4j.Logger;
@@ -35,6 +34,8 @@ import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.famiao.search.base.IndexerParam;
+
+import cn.hutool.core.io.FileUtil;
 
 /**
  * @desc
@@ -53,6 +54,8 @@ public class Indexer {
     private Integer indexShardsNum;
     @Value("${es.index.replicas}")
     private Integer indexReplicasNum;
+    @Value("${dynamic.settings.path}")
+    private String settingsPath;
 	
 	private static final Logger logger = LoggerFactory.getLogger(Indexer.class);
 
@@ -70,7 +73,7 @@ public class Indexer {
 			logger.warn("delete index isAcknowledged = {}", isAcknowledged);
 		}
 		CreateIndexRequest request = new CreateIndexRequest(index);
-		request.settings(this.settings());
+		request.settings(this.settings(), XContentType.JSON);
 		request.mapping(mapping, XContentType.JSON);
 		request.alias(new Alias(IndexerParam.SEARCH_INDEX_ALIAS));
         //创建索引
@@ -202,10 +205,12 @@ public class Indexer {
         AcknowledgedResponse response = this.client.indices().updateAliases(indicesAliasesRequest, RequestOptions.DEFAULT);
         return response.isAcknowledged();
 	}
-	
-	public Settings settings() {
-	    Settings settings = Settings.builder().put("index.number_of_shards", indexShardsNum).put("index.number_of_replicas", indexReplicasNum).build();
-	    return settings;
-	}
 
+	/**
+	 * 读取外部配置的settings.json配置文件
+	 * @return
+	 */
+	public String settings() {
+        return FileUtil.readString(settingsPath, "UTF-8");
+	}
 }

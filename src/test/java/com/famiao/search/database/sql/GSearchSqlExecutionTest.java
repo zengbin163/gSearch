@@ -17,7 +17,7 @@ public class GSearchSqlExecutionTest {
 	@Autowired
 	private DynamicSqlResolver dynamicSqlResolver;
 	@Autowired
-	private GSearchSqlExecution gSearchSqlExecution;
+	private SearchSqlExecution gSearchSqlExecution;
 
 	@Test
 	public void test1() {

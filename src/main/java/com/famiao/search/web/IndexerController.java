@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.famiao.search.database.sql.DynamicSqlResolver;
-import com.famiao.search.database.sql.GSearchSqlExecution;
+import com.famiao.search.database.sql.SearchSqlExecution;
 import com.famiao.search.database.sql.template.DynamicSqlTemplate;
 import com.famiao.search.index.Indexer;
 
@@ -35,7 +35,7 @@ public class IndexerController {
 	@Autowired
 	private DynamicSqlResolver dynamicSqlResolver;
 	@Autowired
-	private GSearchSqlExecution gSearchSqlExecution;
+	private SearchSqlExecution searchSqlExecution;
 
 	private static final Logger logger = LoggerFactory.getLogger(IndexerController.class);
 
@@ -47,10 +47,10 @@ public class IndexerController {
 			logger.warn("the build index doc sql id={}", temp.getId());
 			map.put("sqlId", temp.getSql());
 			if (null == sqlId) {
-				this.gSearchSqlExecution.execute(temp.getSql(), temp.getIndex(), temp.getMapping()); //如果sqlId不传入就构建全文索引
+				this.searchSqlExecution.execute(temp.getSql(), temp.getIndex(), temp.getMapping()); //如果sqlId不传入就构建全文索引
 			} else {
 				if (sqlId.equals(temp.getId())) {
-					this.gSearchSqlExecution.execute(temp.getSql(), temp.getIndex(), temp.getMapping()); //如果sqlId传入，就构建指定的sqlId索引
+					this.searchSqlExecution.execute(temp.getSql(), temp.getIndex(), temp.getMapping()); //如果sqlId传入，就构建指定的sqlId索引
 				}
 			}
 		}
